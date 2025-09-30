@@ -1,6 +1,6 @@
-#Autor: Sergio Gabriel Chaves Mosquera
-#Asignación: Parcial 1
-#Objetivo del programa: simulador de operaciones básicas de una biblioteca universitaria.
+# Autor: Sergio Gabriel Chaves Mosquera
+# Asignación: Parcial 1
+# Objetivo del programa: simulador de operaciones básicas de una biblioteca universitaria.
 
 class Libro:
     def __init__(self, titulo, autor, categoria, isbn):
@@ -18,34 +18,46 @@ class Libro:
 class Usuario:
     def __init__(self, nombre, documento, programa):
         self._nombre = nombre
-        self._numerodocumento = int(documento)
+        self._documento = int(documento)
         self._programa = programa
 
     def obtener_documento(self):
-        return self._numerodocumento
+        return self._documento
 
     def obtener_info(self):
-        return f"Usuario: {self._nombre} | Numero Documento: {self._numerodocumento} | Programa: {self._programa}"
+        return f"Usuario: {self._nombre} | Documento: {self._documento} | Programa: {self._programa}"
 
 class Biblioteca:
     def __init__(self, nombrebiblio):
         self.nombrebiblio = nombrebiblio
         self._catalogo = {}
         self._usuarios = {}
+        # Categorías predefinidas (mínimo 3)
+        self._categorias = ["Novela", "Ciencia", "Historia", "Desarrollo Personal", "Cuentos", "Guias", "Otro"]
 
     def registrar_libro(self, libronuevo):
         isbn = libronuevo.obtener_isbn()
         if isbn in self._catalogo:
-            return False, f"ERROR: El libro con ISBN {isbn} ya existe."
+            return f"ERROR: El libro con ISBN {isbn} ya existe."
         self._catalogo[isbn] = libronuevo 
-        return True, f"Libro registrado con exito: {libronuevo.obtener_info_libro()}"
+        return f"Libro registrado con exito: {libronuevo.obtener_info_libro()}"
 
     def registrar_usuario(self, usuarioNuevo):
         doc = usuarioNuevo.obtener_documento()
         if doc in self._usuarios:
-            return False, f"ERROR: Usuario con documento {doc} ya existe."
+            return f"ERROR: Usuario con documento {doc} ya existe."
         self._usuarios[doc] = usuarioNuevo
-        return True, f"Usuario registrado con exito: {usuarioNuevo.obtener_info()}"
+        return f"Usuario registrado con exito: {usuarioNuevo.obtener_info()}"
+
+    def listar_libros(self):
+        if not self._catalogo:
+            return "No hay libros registrados."
+        return "\n".join([libro.obtener_info_libro() for libro in self._catalogo.values()])
+
+    def listar_usuarios(self):
+        if not self._usuarios:
+            return "No hay usuarios registrados."
+        return "\n".join([usuario.obtener_info() for usuario in self._usuarios.values()])
 
 def menu_principal():
     biblio = Biblioteca("Biblioteca UNAL")
@@ -54,26 +66,48 @@ def menu_principal():
         print("1. Registrar nuevo libro")
         print("2. Registrar nuevo usuario")
         print("3. Salir del Programa")
-        opcion_elegida = int(input("Por favor ingrese la opcion que desee: "))
+        print("4. Listar libros")
+        print("5. Listar usuarios")
         
+        try:
+            opcion_elegida = int(input("Por favor ingrese la opcion que desee: "))
+        except ValueError:
+            print("Entrada inválida, ingrese un número.")
+            continue
+
         if opcion_elegida == 1:
             titulo = input("Titulo: ")
             autor = input("Autor: ")
-            categoria = input("Categoria: ")
-            isbn = input("ISBN: ")
+            print("\nCategorías disponibles:")
+            for i, cat in enumerate(biblio._categorias, start=1):
+                print(f"{i}. {cat}")
+            op_cat = int(input("Seleccione la categoría (número): "))
+            while op_cat < 1 or op_cat > len(biblio._categorias):
+                op_cat = int(input("Opción inválida. Seleccione de nuevo: "))
+            categoria = biblio._categorias[op_cat - 1]
+            isbn = input("ISBN (solo números): ")
             libro = Libro(titulo, autor, categoria, isbn)
             print(biblio.registrar_libro(libro))
 
         elif opcion_elegida == 2:
             nombre = input("Nombre completo: ")
-            numerodocumento = input("Numero Documento: ")
+            documento = input("Documento: ")
             programa = input("Programa: ")
-            usuario = Usuario(nombre, numerodocumento, programa)
+            usuario = Usuario(nombre, documento, programa)
             print(biblio.registrar_usuario(usuario))
 
         elif opcion_elegida == 3:
             print("Saliendo del programa...")
             break
+
+        elif opcion_elegida == 4:
+            print("\nLista de Libros Registrados:")
+            print(biblio.listar_libros())
+
+        elif opcion_elegida == 5:
+            print("\nLista de Usuarios Registrados:")
+            print(biblio.listar_usuarios())
+
         else:
             print("Opción inválida. Intente de nuevo.")
 
