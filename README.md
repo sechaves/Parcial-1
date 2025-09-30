@@ -2,7 +2,8 @@ Autor: Sergio Gabriel Chaves Mosquera
 
 Asignación: Parcial 1
 
-Descripción: En este repositorio se encuentran todos los archivos relacionados al parcial 1, con archivo principal parcial1.py. 
+Descripción: En este repositorio se encuentran todos los archivos relacionados al parcial 1, con archivo principal parcial1.py en el cual se encuentra el programa
+En el archivo .pdf se encuentra la tabla de requerimientos
 
 Adjunto a continuación capturas de pantalla con el funcionamiento del programa y su salida en consola:
 
